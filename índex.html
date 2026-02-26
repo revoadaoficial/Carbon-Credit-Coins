@@ -2,7 +2,7 @@
 <html lang="pt-BR">
 <head>
 <meta charset="UTF-8">
-<title>Carbon Credit Coin Wallet</title>
+<title>Carbon Credit Coin</title>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
 <!-- Google Fonts -->
@@ -13,161 +13,269 @@
 
 <!-- Estilo CSS -->
 <style>
+  /* Reset e fontes */
+  body, html {margin:0;padding:0; font-family:'Roboto', sans-serif; overflow-x:hidden;}
   body {
-    margin: 0;
-    font-family: 'Roboto', sans-serif;
-    background: #0a1a2a;
-    color: #fff;
-    overflow-x: hidden;
+    background: linear-gradient(#1f1f1f,#101010); 
+    color:#000;
+    position:relative;
   }
+
+  /* Fundo interativo do mapa mundi */
+  #mapCanvas {
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:-2;
+    background: #1f1f1f;
+  }
+
+  /* Fundo logos institucional fundido */
+  #logosBackground {
+    position: fixed;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    z-index:-1;
+    background: url('https://raw.githubusercontent.com/revoadaoficial/Carbon-Credit-Coins/main/fundos_logos.png') center center/cover no-repeat;
+    opacity:0.1;
+  }
+
+  /* Header */
   header {
-    text-align: center;
-    padding: 30px 10px;
+    text-align:center;
+    padding:40px 20px;
+    position:relative;
+    z-index:1;
   }
   h1 {
-    font-size: 2.5rem;
-    color: #00ff99;
+    font-size:3rem;
+    color:#00ff99;
+    text-shadow:2px 2px 8px rgba(0,0,0,0.6);
   }
+  #descricao {
+    font-size:1.2rem;
+    margin-top:10px;
+    color:#eee;
+    max-width:900px;
+    margin-left:auto;
+    margin-right:auto;
+  }
+  #slogan {
+    font-size:1rem;
+    color:#ccc;
+    margin-top:5px;
+    font-style:italic;
+  }
+
+  /* Saldo e gráficos */
   #saldo {
-    font-size: 1.5rem;
-    margin-bottom: 20px;
-  }
-  .wallet-btn {
-    background: #00ff99;
-    border: none;
-    padding: 12px 25px;
-    font-size: 1.1rem;
-    font-weight: bold;
-    border-radius: 10px;
-    cursor: pointer;
-    display: inline-flex;
-    align-items: center;
-    gap: 10px;
-    transition: 0.3s;
-  }
-  .wallet-btn:hover {
-    transform: scale(1.05);
-  }
-  .wallet-btn img {
-    width: 25px;
-    height: 25px;
-  }
-  #wallet-status {
-    margin-top: 20px;
-    font-size: 1.1rem;
-    text-align: center;
+    font-size:1.5rem;
+    margin:30px 0 15px 0;
+    color:#fff;
   }
   canvas {
-    max-width: 90%;
+    max-width:90%;
     margin: 30px auto;
-    display: block;
+    display:block;
     background: rgba(255,255,255,0.05);
-    border-radius: 15px;
-    padding: 15px;
+    border-radius:15px;
+    padding:15px;
   }
-  /* Fundo interativo com partículas simples */
-  #particles {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    z-index: -1;
+
+  /* Botões */
+  .wallet-btn, .action-btn {
+    background: linear-gradient(145deg,#d4af37,#f0c75e);
+    border:none;
+    padding:12px 25px;
+    font-size:1.1rem;
+    font-weight:bold;
+    border-radius:12px;
+    cursor:pointer;
+    display:inline-flex;
+    align-items:center;
+    gap:10px;
+    transition:0.3s;
+    margin:5px;
+    color:#111;
+    box-shadow:0 0 15px rgba(212,175,55,0.6);
   }
+  .wallet-btn:hover, .action-btn:hover {
+    transform: scale(1.05);
+    box-shadow:0 0 25px rgba(212,175,55,0.9);
+  }
+  .wallet-btn img, .action-btn img {
+    width:25px;
+    height:25px;
+  }
+
+  /* Cursor logo e fumaça */
+  #cursorLogo {
+    position:absolute;
+    width:30px;
+    height:30px;
+    pointer-events:none;
+    z-index:10;
+    transition:0.1s;
+  }
+  .smoke {
+    position:absolute;
+    width:15px;
+    height:15px;
+    background: radial-gradient(circle,#00ff99 0%,transparent 70%);
+    border-radius:50%;
+    opacity:0.6;
+    pointer-events:none;
+    animation:smokeMove 1.5s forwards;
+  }
+  @keyframes smokeMove {
+    0% {transform: translate(0,0) scale(1); opacity:0.6;}
+    100% {transform: translate(0,-40px) scale(0.5); opacity:0;}
+  }
+
+  /* Área verde garantida carbono */
+  #greenReserve {
+    width:90%;
+    margin:50px auto;
+    padding:50px;
+    background: linear-gradient(to right,#0f3d0f,#145014);
+    border-radius:20px;
+    color:#fff;
+    font-size:1.2rem;
+    text-align:center;
+  }
+
+  /* Video institucional */
+  #videoSection {
+    width:90%;
+    margin:50px auto;
+    display:flex;
+    justify-content:center;
+  }
+  #videoSection video {
+    width:100%;
+    border-radius:20px;
+    box-shadow:0 0 25px rgba(0,0,0,0.5);
+  }
+
 </style>
 </head>
 <body>
 
-<!-- Fundo interativo -->
-<canvas id="particles"></canvas>
+<!-- Fundo interativo mapa mundi -->
+<canvas id="mapCanvas"></canvas>
+
+<!-- Fundo logos institucional -->
+<div id="logosBackground"></div>
+
+<!-- Cursor logo -->
+<img id="cursorLogo" src="https://raw.githubusercontent.com/revoadaoficial/Carbon-Credit-Coins/main/logo.png" alt="Logo CCC">
 
 <header>
   <h1>Carbon Credit Coin</h1>
-  <p id="saldo">Saldo disponível: US$ 23,347,981,532.72</p>
+  <p id="descricao">Um ativo digital sustentável com garantia real de crédito de carbono, mostrando credibilidade, luxo e tecnologia de ponta.</p>
+  <p id="slogan">Igualdade · Liberdade · Fraternidade</p>
+  <p id="saldo">Saldo garantido: US$ 23,347,981,532.72</p>
   <button class="wallet-btn" onclick="connectWallet()">
     <img src="https://raw.githubusercontent.com/revoadaoficial/Carbon-Credit-Coins/main/logo.png" alt="CCC Logo">
     Conectar Wallet
   </button>
   <div id="wallet-status"></div>
+
+  <!-- Botões de ação -->
+  <div>
+    <button class="action-btn">Investimentos</button>
+    <button class="action-btn">Criptoativos</button>
+    <button class="action-btn">Envio / Recebimento</button>
+  </div>
 </header>
+
+<!-- Área verde garantida -->
+<div id="greenReserve">
+  Garantia real de crédito de carbono avaliada em US$ 20 bilhões.
+</div>
 
 <!-- Gráficos de investimentos -->
 <canvas id="investChart"></canvas>
 
+<!-- Video institucional -->
+<div id="videoSection">
+  <video controls autoplay muted loop>
+    <source src="https://raw.githubusercontent.com/revoadaoficial/Carbon-Credit-Coins/main/video_institucional.mp4" type="video/mp4">
+    Seu navegador não suporta o vídeo.
+  </video>
+</div>
+
 <!-- Scripts -->
 <script type="module">
 
-// Fundo de partículas simples
-const canvas = document.getElementById('particles');
-const ctx = canvas.getContext('2d');
-canvas.width = window.innerWidth;
-canvas.height = window.innerHeight;
-const particlesArray = [];
-class Particle {
-  constructor() {
-    this.x = Math.random()*canvas.width;
-    this.y = Math.random()*canvas.height;
-    this.size = Math.random()*3+1;
-    this.speedX = Math.random()*1-0.5;
-    this.speedY = Math.random()*1-0.5;
-  }
-  update() {
-    this.x += this.speedX;
-    this.y += this.speedY;
-    if(this.x < 0 || this.x > canvas.width) this.speedX *= -1;
-    if(this.y < 0 || this.y > canvas.height) this.speedY *= -1;
-  }
-  draw() {
-    ctx.fillStyle = "#00ff99";
-    ctx.beginPath();
-    ctx.arc(this.x,this.y,this.size,0,Math.PI*2);
-    ctx.fill();
-  }
-}
-function initParticles(){
-  for(let i=0;i<150;i++){
-    particlesArray.push(new Particle());
-  }
-}
-function animateParticles(){
-  ctx.clearRect(0,0,canvas.width,canvas.height);
-  particlesArray.forEach(p=>{p.update();p.draw();});
-  requestAnimationFrame(animateParticles);
-}
-initParticles();
-animateParticles();
+/* Fundo mapa mundi rotativo simplificado */
+const mapCanvas = document.getElementById('mapCanvas');
+const mapCtx = mapCanvas.getContext('2d');
+mapCanvas.width = window.innerWidth;
+mapCanvas.height = window.innerHeight;
 
-// Conexão fictícia de wallet
-function connectWallet() {
-  const status = document.getElementById('wallet-status');
-  status.innerHTML = "Wallet conectada: 0x25b0e8...c26b";
+// Simples animação do mapa (placeholder, futuramente substituir por globo 3D real)
+let offsetX = 0;
+function drawMap(){
+  mapCtx.clearRect(0,0,mapCanvas.width,mapCanvas.height);
+  mapCtx.fillStyle = 'rgba(255,255,255,0.05)';
+  mapCtx.fillRect(offsetX,50,mapCanvas.width,200);
+  mapCtx.fillRect(offsetX-2000,50,mapCanvas.width,200);
+  offsetX += 0.2;
+  if(offsetX>2000) offsetX=0;
+  requestAnimationFrame(drawMap);
 }
+drawMap();
 
-// Gráfico de investimentos
-const ctxChart = document.getElementById('investChart').getContext('2d');
-const investChart = new Chart(ctxChart, {
-    type: 'doughnut',
-    data: {
-        labels: ['Petróleo', 'Ouro', 'Criptoativos', 'B3'],
-        datasets: [{
-            label: 'Investimentos',
-            data: [5000000000, 4300000000, 9800000000, 4200000000],
-            backgroundColor: ['#f39c12','#f1c40f','#3498db','#2ecc71'],
-            borderWidth: 1
-        }]
-    },
-    options: {
-        responsive:true,
-        plugins:{
-            legend:{
-                position:'bottom',
-                labels:{
-                    color:'#fff'
-                }
-            }
-        }
-    }
+/* Cursor logo interativo e fumaça */
+const cursorLogo = document.getElementById('cursorLogo');
+document.addEventListener('mousemove', e=>{
+  cursorLogo.style.left = e.clientX + 'px';
+  cursorLogo.style.top = e.clientY + 'px';
+  // Criar fumacinha
+  const smoke = document.createElement('div');
+  smoke.className='smoke';
+  smoke.style.left = e.clientX+'px';
+  smoke.style.top = e.clientY+'px';
+  document.body.appendChild(smoke);
+  setTimeout(()=>smoke.remove(),1500);
 });
+
+/* Chart de investimentos */
+const ctx = document.getElementById('investChart').getContext('2d');
+const investChart = new Chart(ctx,{
+  type:'bar',
+  data:{
+    labels:['Petróleo','Ouro','Criptoativos','B3'],
+    datasets:[{
+      label:'Investimentos',
+      data:[5000000000,4300000000,9800000000,4200000000],
+      backgroundColor:['#f39c12','#f1c40f','#3498db','#2ecc71'],
+      borderWidth:1
+    }]
+  },
+  options:{
+    responsive:true,
+    plugins:{
+      legend:{position:'bottom', labels:{color:'#fff'}},
+      tooltip:{mode:'index'}
+    },
+    scales:{
+      y:{ticks:{color:'#fff'}, beginAtZero:true},
+      x:{ticks:{color:'#fff'}}
+    }
+  }
+});
+
+/* Placeholder connectWallet */
+function connectWallet(){
+  document.getElementById('wallet-status').innerText='Wallet conectada com sucesso!';
+}
+
 </script>
 
 </body>
