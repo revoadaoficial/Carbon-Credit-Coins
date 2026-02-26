@@ -1,0 +1,14 @@
+
+my-layerswap-app/
+├─ client/             # React app com Layerswap Widget
+│  ├─ public/
+│  │  └─ index.html
+│  └─ src/
+│     ├─ App.tsx
+│     ├─ index.tsx
+│     └─ theme.ts
+├─ server/             # Express server para servir o React build
+│  └─ index.js
+├─ package.json        # Root package.json
+├─ Procfile            # Para Heroku
+└─ .gitignore
