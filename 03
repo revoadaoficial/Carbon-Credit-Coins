@@ -1,0 +1,22 @@
+
+import React from 'react';
+import { LayerswapProvider, Swap } from '@layerswap/widget';
+import { createEVMProvider } from '@layerswap/wallet-evm';
+import { colorTheme } from './theme';
+
+function App() {
+  return (
+    <LayerswapProvider
+      config={{
+        apiKey: process.env.REACT_APP_LAYERSWAP_API_KEY || '',
+        version: 'mainnet',
+        theme: colorTheme,
+      }}
+      walletProviders={[createEVMProvider()]}
+    >
+      <Swap />
+    </LayerswapProvider>
+  );
+}
+
+export default App;
