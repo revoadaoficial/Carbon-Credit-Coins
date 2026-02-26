@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<title>Relatório Anual Carbon Credit Coin</title>
+<style>
+  body { font-family: Arial, sans-serif; line-height: 1.6; margin: 20px; background-color: #f4f4f4; color: #333; }
+  h1, h2, h3 { color: #2E8B57; }
+  h1 { text-align: center; margin-bottom: 5px; }
+  h2 { margin-top: 30px; border-bottom: 2px solid #2E8B57; padding-bottom: 5px; }
+  h3 { margin-top: 20px; }
+  p { margin: 5px 0; }
+  ul { margin: 5px 0 15px 20px; }
+  table { border-collapse: collapse; width: 100%; margin: 10px 0; background-color: #fff; }
+  th, td { border: 1px solid #ccc; padding: 8px; text-align: left; }
+  th { background-color: #2E8B57; color: #fff; }
+  .valor { font-weight: bold; color: green; }
+  .comprovante { max-width: 100%; border: 1px solid #ccc; padding: 5px; margin: 10px 0; display: block; }
+  .section { background-color: #fff; padding: 15px; margin-bottom: 20px; border-radius: 5px; }
+</style>
+</head>
+<body>
+
+<h1>Relatório Anual Carbon Credit Coin</h1>
+<p style="text-align:center;">Período encerrado em 31 de dezembro de 2555 (Modelo 56-1)</p>
+
+<div class="section">
+<h2>Seção 1: Resumo Executivo</h2>
+<p>A <strong>Carbon Credit Coin</strong> apresenta um desempenho financeiro consolidado com saldo total aproximado de <span class="valor">R$ 23.450.000.000,00</span>. Este relatório detalha suas operações, ativos, investimentos e estrutura de governança.</p>
+</div>
+
+<div class="section">
+<h2>Seção 2: Empresa Emissora</h2>
+
+<h3>1. Fatores de Risco</h3>
+<p>Riscos de mercado, regulatórios, tecnológicos e ambientais que podem impactar os resultados da Carbon Credit Coin.</p>
+
+<h3>2. Lógica do Negócio e Estrutura Operacional</h3>
+<p>2.1 Histórico e mudanças de controle da empresa.</p>
+<p>2.2 Visão geral das operações do grupo.</p>
+<p>2.3 Estrutura de receitas.</p>
+<p>2.4 Objetivos e metas operacionais.</p>
+
+<h3>3. Linhas de Produtos e Serviços</h3>
+<ul>
+  <li>Consultoria de negócios e finanças</li>
+  <li>Representação e consultoria imobiliária</li>
+  <li>Consultoria de investimentos Offshore Capital</li>
+  <li>Negócios de investimento</li>
+</ul>
+<p>Fatores de sucesso, impactos ambientais, direitos e restrições comerciais.</p>
+
+<h3>4. Pesquisa e Desenvolvimento</h3>
+<p>Investimentos contínuos em tecnologias de crédito de carbono e sustentabilidade.</p>
+
+<h3>5. Ativos</h3>
+<p>5.1 Ativos operacionais</p>
+<p>5.2 Investimentos da empresa</p>
+<p>5.3 Investimentos em títulos e criptomoedas</p>
+
+<h3>6. Projetos Futuros</h3>
+<p>Desenvolvimento de novos tokens de carbono e parcerias internacionais.</p>
+
+<h3>7. Litígios</h3>
+<p>Não há disputas significativas pendentes até a data do relatório.</p>
+
+<h3>8. Estrutura de Capital</h3>
+<p>Capital social, reservas e financiamentos estratégicos.</p>
+</div>
+
+<div class="section">
+<h2>Seção 9: Gestão e Governança</h2>
+<p>9.1 Estrutura da gestão</p>
+<p>9.2 Nomeação de diretores</p>
+<p>9.3 Remuneração de executivos</p>
+<p>9.4 Governança corporativa</p>
+<p>9.5 Controle do uso de informações internas</p>
+<p>9.6 Equipe de pessoal</p>
+</div>
+
+<div class="section">
+<h2>Seção 10: Controles Internos</h2>
+<p>Sistemas de auditoria interna e compliance operacional.</p>
+</div>
+
+<div class="section">
+<h2>Seção 11: Transações Intercompanhias</h2>
+<p>Registros detalhados de transações entre empresas relacionadas.</p>
+</div>
+
+<div class="section">
+<h2>Seção 12: Demonstrações Financeiras</h2>
+
+<h3>12.1 Balanço Patrimonial Consolidado (em R$)</h3>
+<table>
+<tr><th>Descrição</th><th>Valor</th></tr>
+<tr><td>Ativos Totais</td><td class="valor">23.450.000.000,00</td></tr>
+<tr><td>Passivos Totais</td><td>---</td></tr>
+<tr><td>Patrimônio Líquido</td><td>23.450.000.000,00</td></tr>
+</table>
+
+<h3>12.2 Demonstração de Resultados (simulada)</h3>
+<table>
+<tr><th>Item</th><th>Valor (R$)</th></tr>
+<tr><td>Receita Operacional</td><td>1.200.000.000,00</td></tr>
+<tr><td>Custos e Despesas</td><td>300.000.000,00</td></tr>
+<tr><td>Lucro Operacional</td><td>900.000.000,00</td></tr>
+<tr><td>Impostos</td><td>180.000.000,00</td></tr>
+<tr><td>Lucro Líquido</td><td class="valor">720.000.000,00</td></tr>
+</table>
+
+<h3>12.3 Fluxo de Caixa (simulado)</h3>
+<table>
+<tr><th>Item</th><th>Valor (R$)</th></tr>
+<tr><td>Entradas de Caixa</td><td>1.500.000.000,00</td></tr>
+<tr><td>Saídas de Caixa</td><td>800.000.000,00</td></tr>
+<tr><td>Saldo de Caixa</td><td class="valor">700.000.000,00</td></tr>
+</table>
+
+<h3>Comprovante Bancário</h3>
+<p>Saldo confirmado de <span class="valor">R$ 23.450.000.000,00</span>.</p>
+<img src="comprovante.png" alt="Comprovante bancário" class="comprovante">
+</div>
+
+<div class="section">
+<h2>Seção 13: Informações Adicionais</h2>
+<p>Outros dados relevantes sobre operações, investimentos e regulamentação.</p>
+</div>
+
+<div class="section">
+<h2>Seção 3: Certificação de Dados</h2>
+<p>Certificação da exatidão das informações apresentadas no relatório.</p>
+</div>
+
+<div class="section">
+<h2>Anexos</h2>
+<ul>
+  <li>Anexo 1: Detalhes de diretores, executivos e representantes em subsidiárias</li>
+  <li>Anexo 2: Detalhes de diretores, executivos e representantes em empresas relacionadas</li>
+  <li>Anexo 3: Outros documentos relevantes</li>
+</ul>
+</div>
+
+</body>
+</html>
