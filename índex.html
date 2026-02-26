@@ -1,19 +1,234 @@
 <!DOCTYPE html>
-<html>
+<html lang="pt-BR">
 <head>
   <meta charset="UTF-8">
-  <title>CarbonCreditCoins Wallet</title>
+  <title>Carbon Credit Coin Dashboard</title>
+  <script src="https://cdn.jsdelivr.net/npm/ethers@6/dist/ethers.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles-engine"></script>
+  <script src="https://cdn.jsdelivr.net/npm/tsparticles"></script>
+  <style>
+    body, html {
+      margin: 0;
+      padding: 0;
+      height: 100%;
+      font-family: Arial, sans-serif;
+      overflow-x: hidden;
+    }
+
+    #tsparticles {
+      position: fixed;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+    }
+
+    body {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      color: #fff;
+    }
+
+    header {
+      display: flex;
+      align-items: center;
+      margin: 20px 0;
+    }
+    header img {
+      width: 60px;
+      margin-right: 15px;
+    }
+    h1 {
+      font-size: 2rem;
+      margin: 0;
+    }
+
+    button {
+      background-color: #00b894;
+      border: none;
+      padding: 12px 20px;
+      color: white;
+      font-size: 1rem;
+      border-radius: 8px;
+      cursor: pointer;
+      margin: 10px 0;
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      transition: 0.2s;
+    }
+    button:hover { transform: scale(1.05); }
+
+    #wallet-status, #balance {
+      margin-top: 5px;
+      font-size: 1rem;
+    }
+
+    #charts-container {
+      display: flex;
+      gap: 40px;
+      flex-wrap: wrap;
+      justify-content: center;
+      margin-top: 30px;
+      width: 90%;
+    }
+    canvas {
+      background: rgba(0,0,0,0.2);
+      border-radius: 15px;
+      padding: 10px;
+    }
+
+    section.report {
+      max-width: 900px;
+      margin-top: 40px;
+      background: rgba(0,0,0,0.25);
+      padding: 20px;
+      border-radius: 15px;
+    }
+    section.report h2 {
+      margin-top: 0;
+      color: #ffeaa7;
+    }
+    .logo-btn {
+      width: 24px;
+      height: 24px;
+    }
+  </style>
 </head>
 <body>
 
-  <h1>CarbonCreditCoins</h1>
-  <p>Saldo disponível: $100,000,000.37 USD</p>
+<div id="tsparticles"></div>
 
-  <button onclick="start()">Conectar Wallet</button>
+<header>
+  <img src="carbon-logo.png" alt="Carbon Credit Coin Logo">
+  <h1>Carbon Credit Coin Dashboard</h1>
+</header>
 
-  <div id="wallet-status"></div>
+<button id="connect-btn">
+  <img src="carbon-logo.png" class="logo-btn" alt="Logo"> Conectar Wallet
+</button>
 
-  <script type="module" src="./web3-connect.js"></script>
+<div id="wallet-status"></div>
+<div id="balance">Saldo estimado: $23.4 bilhões</div>
+
+<section class="report">
+  <h2>Relatório Carbon Credit Coin</h2>
+  <p>Investimentos:</p>
+  <ul>
+    <li>Petróleo: $5.2 bilhões</li>
+    <li>Ouro: $7.8 bilhões</li>
+    <li>Criptoativos: $6.1 bilhões</li>
+    <li>Ativos B3: $4.3 bilhões</li>
+  </ul>
+</section>
+
+<div id="charts-container">
+  <canvas id="investmentsChart" width="400" height="250"></canvas>
+  <canvas id="balanceChart" width="400" height="250"></canvas>
+</div>
+
+<script type="module">
+  // --- Fundo animado tsparticles ---
+  tsParticles.load("tsparticles", {
+    fpsLimit: 60,
+    background: { color: "transparent" },
+    particles: {
+      number: { value: 80, density: { enable: true, area: 800 } },
+      color: { value: ["#00b894", "#ffeaa7", "#6c5ce7"] },
+      shape: { type: "circle" },
+      opacity: { value: 0.6, random: true },
+      size: { value: 3, random: true },
+      move: { enable: true, speed: 2, direction: "none", random: true, outModes: "out" }
+    },
+    interactivity: {
+      events: {
+        onHover: { enable: true, mode: "repulse" },
+        onClick: { enable: true, mode: "push" }
+      },
+      modes: { repulse: { distance: 100 }, push: { quantity: 4 } }
+    },
+    detectRetina: true
+  });
+
+  // --- Wallet Web3 ---
+  const connectBtn = document.getElementById('connect-btn');
+  const walletStatus = document.getElementById('wallet-status');
+  const balanceDiv = document.getElementById('balance');
+  let provider, signer;
+
+  async function start() {
+    if (window.ethereum) {
+      try {
+        await window.ethereum.request({ method: 'eth_requestAccounts' });
+        provider = new ethers.BrowserProvider(window.ethereum);
+        signer = await provider.getSigner();
+        const address = await signer.getAddress();
+        walletStatus.textContent = `Conectado: ${address}`;
+        connectBtn.textContent = 'Desconectar';
+        connectBtn.onclick = disconnect;
+        getBalance();
+      } catch (err) {
+        walletStatus.textContent = 'Erro ao conectar a wallet.';
+        console.error(err);
+      }
+    } else {
+      walletStatus.textContent = 'Nenhuma carteira Ethereum detectada. Instale MetaMask!';
+    }
+  }
+
+  async function getBalance() {
+    if (!signer) return;
+    const address = await signer.getAddress();
+    const balance = await provider.getBalance(address);
+    const formatted = ethers.formatEther(balance);
+    balanceDiv.textContent = `Saldo Wallet: ${formatted} ETH`;
+  }
+
+  function disconnect() {
+    walletStatus.textContent = 'Wallet desconectada';
+    balanceDiv.textContent = 'Saldo estimado: $23.4 bilhões';
+    connectBtn.textContent = 'Conectar Wallet';
+    connectBtn.onclick = start;
+    signer = null;
+    provider = null;
+  }
+
+  connectBtn.onclick = start;
+
+  // --- Gráficos Chart.js ---
+  const investmentsCtx = document.getElementById('investmentsChart');
+  const balanceCtx = document.getElementById('balanceChart');
+
+  const investmentsChart = new Chart(investmentsCtx, {
+    type: 'doughnut',
+    data: {
+      labels: ['Petróleo', 'Ouro', 'Criptoativos', 'Ativos B3'],
+      datasets: [{
+        label: 'Investimentos',
+        data: [5.2, 7.8, 6.1, 4.3],
+        backgroundColor: ['#e17055', '#fdcb6e', '#00b894', '#0984e3']
+      }]
+    },
+    options: { plugins: { legend: { position: 'bottom' } } }
+  });
+
+  const balanceChart = new Chart(balanceCtx, {
+    type: 'bar',
+    data: {
+      labels: ['Total Saldo'],
+      datasets: [{
+        label: 'Saldo em bilhões USD',
+        data: [23.4],
+        backgroundColor: ['#6c5ce7']
+      }]
+    },
+    options: {
+      scales: { y: { beginAtZero: true } },
+      plugins: { legend: { display: false } }
+    }
+  });
+</script>
 
 </body>
 </html>
