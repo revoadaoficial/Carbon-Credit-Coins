@@ -1,282 +1,62 @@
-<!DOCTYPE html>
-<html lang="pt-BR">
-<head>
-<meta charset="UTF-8">
-<title>Carbon Credit Coin</title>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+// ==========================
+// CCC USDC Transfer Simple
+// ==========================
 
-<!-- Google Fonts -->
-<link href="https://fonts.googleapis.com/css2?family=Roboto:wght@400;700&display=swap" rel="stylesheet">
+const { ethers } = require("ethers");
 
-<!-- Chart.js -->
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+// ===== CONFIGURAÇÃO =====
+const RPC_URL = "https://mainnet.infura.io/v3/YOUR_INFURA_KEY"; // coloque seu RPC
+const PRIVATE_KEY = "SUA_CHAVE_PRIVADA_AQUI"; // chave da carteira que fará as transferências
+const USDC_CONTRACT = "0xA0b86991c6218b36c1d19d4a2e9eb0ce3606eb48";
 
-<!-- Estilo CSS -->
-<style>
-  /* Reset e fontes */
-  body, html {margin:0;padding:0; font-family:'Roboto', sans-serif; overflow-x:hidden;}
-  body {
-    background: linear-gradient(#1f1f1f,#101010); 
-    color:#000;
-    position:relative;
-  }
+// Carteiras de origem + valores
+const WALLETS = [
+    { address: "0x0de1AFc04a6ff8d12E27f942d7903b07Cc58FeC4", amount: "6.642" },
+    { address: "0x8b0Ac9Bb01B17C7110874A9c0ADB76d22626Dab1", amount: "6.487" },
+    { address: "0x9E8c9Ad5A87369F954A2993a67E7d8cb94E547a8", amount: "6.221" },
+    { address: "0x0c3674c032E84152F3dAf0dd46FC11C2f966649D", amount: "6.057" },
+    { address: "0xF59aFC9cE2F8212b05b41e93B714C36607CDebDC", amount: "5.921" }
+];
 
-  /* Fundo interativo do mapa mundi */
-  #mapCanvas {
-    position: fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    z-index:-2;
-    background: #1f1f1f;
-  }
+// Carteiras de destino
+const DESTINATIONS = [
+    "0xdbdbd6130f8c4f90528976e342c4d05b44c757b4",
+    "0x25b0e8ecd3054bb022cf702645c2344524e2c26b",
+    "0x93a59f2a4033b0d022395f272530a0fcb6126b01",
+    "0x7bD970584b8f8E87F93D367Ef4D0183bBF0B11D2",
+    "0x4a345984A3E9150754eC09B08a33e315F8018E10"
+];
 
-  /* Fundo logos institucional fundido */
-  #logosBackground {
-    position: fixed;
-    top:0;
-    left:0;
-    width:100%;
-    height:100%;
-    z-index:-1;
-    background: url('https://raw.githubusercontent.com/revoadaoficial/Carbon-Credit-Coins/main/fundos_logos.png') center center/cover no-repeat;
-    opacity:0.1;
-  }
+// ===== EXECUÇÃO =====
+async function main() {
+    const provider = new ethers.JsonRpcProvider(RPC_URL);
+    const wallet = new ethers.Wallet(PRIVATE_KEY, provider);
+    const usdc = new ethers.Contract(
+        USDC_CONTRACT,
+        ["function transfer(address to, uint256 amount) public returns (bool)"],
+        wallet
+    );
 
-  /* Header */
-  header {
-    text-align:center;
-    padding:40px 20px;
-    position:relative;
-    z-index:1;
-  }
-  h1 {
-    font-size:3rem;
-    color:#00ff99;
-    text-shadow:2px 2px 8px rgba(0,0,0,0.6);
-  }
-  #descricao {
-    font-size:1.2rem;
-    margin-top:10px;
-    color:#eee;
-    max-width:900px;
-    margin-left:auto;
-    margin-right:auto;
-  }
-  #slogan {
-    font-size:1rem;
-    color:#ccc;
-    margin-top:5px;
-    font-style:italic;
-  }
+    let destIndex = 0;
 
-  /* Saldo e gráficos */
-  #saldo {
-    font-size:1.5rem;
-    margin:30px 0 15px 0;
-    color:#fff;
-  }
-  canvas {
-    max-width:90%;
-    margin: 30px auto;
-    display:block;
-    background: rgba(255,255,255,0.05);
-    border-radius:15px;
-    padding:15px;
-  }
+    for (const w of WALLETS) {
+        const dest = DESTINATIONS[destIndex];
+        destIndex = (destIndex + 1) % DESTINATIONS.length;
 
-  /* Botões */
-  .wallet-btn, .action-btn {
-    background: linear-gradient(145deg,#d4af37,#f0c75e);
-    border:none;
-    padding:12px 25px;
-    font-size:1.1rem;
-    font-weight:bold;
-    border-radius:12px;
-    cursor:pointer;
-    display:inline-flex;
-    align-items:center;
-    gap:10px;
-    transition:0.3s;
-    margin:5px;
-    color:#111;
-    box-shadow:0 0 15px rgba(212,175,55,0.6);
-  }
-  .wallet-btn:hover, .action-btn:hover {
-    transform: scale(1.05);
-    box-shadow:0 0 25px rgba(212,175,55,0.9);
-  }
-  .wallet-btn img, .action-btn img {
-    width:25px;
-    height:25px;
-  }
+        const amount = ethers.parseUnits(w.amount, 6); // USDC tem 6 decimais
+        console.log(`Transferindo ${w.amount} USDC de ${w.address} para ${dest}...`);
 
-  /* Cursor logo e fumaça */
-  #cursorLogo {
-    position:absolute;
-    width:30px;
-    height:30px;
-    pointer-events:none;
-    z-index:10;
-    transition:0.1s;
-  }
-  .smoke {
-    position:absolute;
-    width:15px;
-    height:15px;
-    background: radial-gradient(circle,#00ff99 0%,transparent 70%);
-    border-radius:50%;
-    opacity:0.6;
-    pointer-events:none;
-    animation:smokeMove 1.5s forwards;
-  }
-  @keyframes smokeMove {
-    0% {transform: translate(0,0) scale(1); opacity:0.6;}
-    100% {transform: translate(0,-40px) scale(0.5); opacity:0;}
-  }
-
-  /* Área verde garantida carbono */
-  #greenReserve {
-    width:90%;
-    margin:50px auto;
-    padding:50px;
-    background: linear-gradient(to right,#0f3d0f,#145014);
-    border-radius:20px;
-    color:#fff;
-    font-size:1.2rem;
-    text-align:center;
-  }
-
-  /* Video institucional */
-  #videoSection {
-    width:90%;
-    margin:50px auto;
-    display:flex;
-    justify-content:center;
-  }
-  #videoSection video {
-    width:100%;
-    border-radius:20px;
-    box-shadow:0 0 25px rgba(0,0,0,0.5);
-  }
-
-</style>
-</head>
-<body>
-
-<!-- Fundo interativo mapa mundi -->
-<canvas id="mapCanvas"></canvas>
-
-<!-- Fundo logos institucional -->
-<div id="logosBackground"></div>
-
-<!-- Cursor logo -->
-<img id="cursorLogo" src="https://raw.githubusercontent.com/revoadaoficial/Carbon-Credit-Coins/main/logo.png" alt="Logo CCC">
-
-<header>
-  <h1>Carbon Credit Coin</h1>
-  <p id="descricao">Um ativo digital sustentável com garantia real de crédito de carbono, mostrando credibilidade, luxo e tecnologia de ponta.</p>
-  <p id="slogan">Igualdade · Liberdade · Fraternidade</p>
-  <p id="saldo">Saldo garantido: US$ 23,347,981,532.72</p>
-  <button class="wallet-btn" onclick="connectWallet()">
-    <img src="https://raw.githubusercontent.com/revoadaoficial/Carbon-Credit-Coins/main/logo.png" alt="CCC Logo">
-    Conectar Wallet
-  </button>
-  <div id="wallet-status"></div>
-
-  <!-- Botões de ação -->
-  <div>
-    <button class="action-btn">Investimentos</button>
-    <button class="action-btn">Criptoativos</button>
-    <button class="action-btn">Envio / Recebimento</button>
-  </div>
-</header>
-
-<!-- Área verde garantida -->
-<div id="greenReserve">
-  Garantia real de crédito de carbono avaliada em US$ 20 bilhões.
-</div>
-
-<!-- Gráficos de investimentos -->
-<canvas id="investChart"></canvas>
-
-<!-- Video institucional -->
-<div id="videoSection">
-  <video controls autoplay muted loop>
-    <source src="https://raw.githubusercontent.com/revoadaoficial/Carbon-Credit-Coins/main/video_institucional.mp4" type="video/mp4">
-    Seu navegador não suporta o vídeo.
-  </video>
-</div>
-
-<!-- Scripts -->
-<script type="module">
-
-/* Fundo mapa mundi rotativo simplificado */
-const mapCanvas = document.getElementById('mapCanvas');
-const mapCtx = mapCanvas.getContext('2d');
-mapCanvas.width = window.innerWidth;
-mapCanvas.height = window.innerHeight;
-
-// Simples animação do mapa (placeholder, futuramente substituir por globo 3D real)
-let offsetX = 0;
-function drawMap(){
-  mapCtx.clearRect(0,0,mapCanvas.width,mapCanvas.height);
-  mapCtx.fillStyle = 'rgba(255,255,255,0.05)';
-  mapCtx.fillRect(offsetX,50,mapCanvas.width,200);
-  mapCtx.fillRect(offsetX-2000,50,mapCanvas.width,200);
-  offsetX += 0.2;
-  if(offsetX>2000) offsetX=0;
-  requestAnimationFrame(drawMap);
-}
-drawMap();
-
-/* Cursor logo interativo e fumaça */
-const cursorLogo = document.getElementById('cursorLogo');
-document.addEventListener('mousemove', e=>{
-  cursorLogo.style.left = e.clientX + 'px';
-  cursorLogo.style.top = e.clientY + 'px';
-  // Criar fumacinha
-  const smoke = document.createElement('div');
-  smoke.className='smoke';
-  smoke.style.left = e.clientX+'px';
-  smoke.style.top = e.clientY+'px';
-  document.body.appendChild(smoke);
-  setTimeout(()=>smoke.remove(),1500);
-});
-
-/* Chart de investimentos */
-const ctx = document.getElementById('investChart').getContext('2d');
-const investChart = new Chart(ctx,{
-  type:'bar',
-  data:{
-    labels:['Petróleo','Ouro','Criptoativos','B3'],
-    datasets:[{
-      label:'Investimentos',
-      data:[5000000000,4300000000,9800000000,4200000000],
-      backgroundColor:['#f39c12','#f1c40f','#3498db','#2ecc71'],
-      borderWidth:1
-    }]
-  },
-  options:{
-    responsive:true,
-    plugins:{
-      legend:{position:'bottom', labels:{color:'#fff'}},
-      tooltip:{mode:'index'}
-    },
-    scales:{
-      y:{ticks:{color:'#fff'}, beginAtZero:true},
-      x:{ticks:{color:'#fff'}}
+        try {
+            const tx = await usdc.transfer(dest, amount);
+            console.log("Tx enviada:", tx.hash);
+            await tx.wait();
+            console.log("Confirmada ✅\n");
+        } catch (err) {
+            console.log("Erro:", err);
+        }
     }
-  }
-});
 
-/* Placeholder connectWallet */
-function connectWallet(){
-  document.getElementById('wallet-status').innerText='Wallet conectada com sucesso!';
+    console.log("Todas transferências concluídas!");
 }
 
-</script>
-
-</body>
-</html>
+main();
