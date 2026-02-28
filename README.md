@@ -1,1 +1,1 @@
-“Este projeto é uma aplicação Node.js simples utilizando o framework Express. Para rodar localmente, instale as dependências com ‘npm install’ e inicie com ‘npm start’. O app ficará disponível em localhost:5006.”
+
